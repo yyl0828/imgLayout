@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://jq22.qiniudn.com/masonry-docs.min.js"></script>
+    <style>
+        .container-fluid {
+            padding: 20px;
+        }
+
+        .box {
+            margin-bottom: 20px;
+            float: left;
+            width: 220px;
+        }
+
+        .box img {
+            max-width: 100%
+        }
+    </style>
+</head>
+<body>
+
+<div id="masonry" class="container-fluid">
+    <!--<div class="box">
+        <h1>4567890</h1>
+        <img src="http://www.superslide2.com/demo/images/pic1.jpg">
+    </div>
+
+    <div class="box">
+        <h1>啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</h1>
+        <img src="http://www.superslide2.com/demo/images/pic2.jpg"></div>
+    <div class="box">
+        <img src="http://www.superslide2.com/demo/images/pic2.jpg">
+        <img src="http://www.superslide2.com/demo/images/pic3.jpg"></div>-->
+    <div class="box">
+        <img src="http://www.superslide2.com/demo/T1.8-picFocus.jpg">
+        <img src="http://img1.timeface.cn/times/wx/ecd0d73db3a506e8a4fc531231d3a82d.jpg@175w_4000h_1l_1pr_2o.jpg">
+        <img src="http://img1.timeface.cn/times/wx/96585e2c6f9d05d2416073adec6d5c61.jpg@270w_4000h_1l_1pr_2o.jpg">
+        <img src="http://img1.timeface.cn/times/wx/99ab95fef11d9b1bfef76d4aee30c204.jpg@248w_4000h_1l_1pr_2o.jpg">
+        <img src="http://www.superslide2.com/demo/images/pic1.jpg">
+        <img src="http://www.superslide2.com/demo/images/pic2.jpg">
+        <img src="http://www.superslide2.com/demo/images/pic3.jpg">
+    <img src="http://www.superslide2.com/demo/T1.1-multipleLine.jpg"></div>
+</div>
+<script>
+    $(function () {
+        var $container = $('#masonry');
+        $container.imagesLoaded(function () {
+            $container.masonry({
+                itemSelector: '.box',
+                gutter: 20,
+                isAnimated: true,
+            });
+        });
+    });
+</script>
+</body>
+</html>

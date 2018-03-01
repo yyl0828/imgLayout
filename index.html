@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/html2canvas.js"></script>
+    <script src="js/FileSaver.js"></script>
+    <script src="js/jquery.wordexport.js"></script>
+    <script src="js/vue.js"></script>
+    <style>
+        #container .item {
+            width: 1240px;
+            height: 1754px;
+        }
+        #imgCon{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>{{current}}/{{list.length}}</h1>
+    <button @click="toWord">生成</button>
+    <button onclick="ImgtoWord()">导出</button>
+    <div id="container">
+        <div class="item" v-for="li in list" style="padding: 10px; background: #f5da55">
+            <h4 style="color: #000; ">{{li.txt1}}</h4>
+            <h4 style="color: #000; ">{{li.txt2}}</h4>
+        </div>
+    </div>
+    <div id="imgCon"></div>
+</div>
+
+<script>
+    /*  $(function(){
+          $('#btnSave').click(function(event) {
+              html2canvas($('#content'),{
+                  onrendered: function(canvas) {
+                      document.body.appendChild(canvas);
+                      convertCanvasToImage(canvas);
+                  }
+              })
+
+          });
+
+          function convertCanvasToImage(canvas) {
+              var image = new Image();
+              image.src = canvas.toDataURL("image/png");
+              document.body.appendChild(image);
+              return image;
+          }
+
+      })*/
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            list: [
+                {
+                    txt1: '1txt1',
+                    txt2: '1txt2'
+                },
+                {
+                    txt1: '12222222',
+                    txt2: '2t2345678xt2'
+                }, {
+                    txt1: 'qwertyer',
+                    txt2: 'sdfghj'
+                }
+            ],
+            current: 0
+        },
+        mounted: function () {
+        },
+        methods: {
+            toWord: function () {
+                this.list.forEach(function (val, index, array) {
+                    toImg($('#container .item:eq(' + index + ')')[0]);
+                });
+            }
+        }
+    });
+
+
+    function toImg(item) {
+        html2canvas(item).then(canvas => {
+            $('#imgCon')[0].appendChild(convertCanvasToImage(canvas));
+            app.current++;
+        });
+    }
+
+    function convertCanvasToImage(canvas) {
+        //新Image对象，可以理解为DOM
+        var image = new Image();
+        // canvas.toDataURL 返回的是一串Base64编码的URL
+        // 指定格式 PNG
+        image.src = canvas.toDataURL("image/png");
+
+        return image;
+    }
+
+    function ImgtoWord() {
+        $("#imgCon").wordExport('ImgWord');
+    }
+
+
+</script>
+</body>
+</html>
