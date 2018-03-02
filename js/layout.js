@@ -124,7 +124,7 @@ function layout(data) {
 
     switch (imgs.length) {
         case 1:
-            Img1(imgs);
+            Img1(imgs[0]);
             break;
         case 2:
             Img2(imgs);
@@ -152,8 +152,8 @@ function layout(data) {
             break;
     }
 
-    function Img1(imgs, iw) {
-        var i = imgs[0];
+    function Img1(img, iw) {
+        var i = img;
         var imgW = iw || i.width;
         //多图时调用img1时，需要占满容器，单张图时使用图片宽度(宽度小于容器宽度时)即可
         if (imgW > width) {
@@ -171,9 +171,16 @@ function layout(data) {
         var a1 = i1.width / i1.height;
         var a2 = i2.width / i2.height;
         var a = a1 + a2;
-        pushImg(i1, width * (a1 / a) - 2);
-        pushImg(i2, width * (a2 / a) - 2);
-        addY(i1.height);
+        //纵横比过小或者过大时，单张放置
+        if (a1 < 0.3 || a1 > 3 || a2 < 0.3 || a2 > 3) {
+            Img1(imgs[0]);
+            Img1(imgs[1]);
+        }
+        else{
+            pushImg(i1, width * (a1 / a) - 2);
+            pushImg(i2, width * (a2 / a) - 2);
+            addY(i1.height);
+        }
     }
 
     function Img3(imgs) {
@@ -238,7 +245,7 @@ function layout(data) {
 
     function Img4(imgs) {
         if (Math.round(Math.random()) === 0) {
-            Img1([imgs[0]], width);
+            Img1(imgs[0], width);
             imgs.splice(0, 1);
             Img3(imgs);
         }
