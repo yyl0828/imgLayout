@@ -154,9 +154,15 @@ function layout(data) {
 
     function Img1(imgs, iw) {
         var i = imgs[0];
-        var imgh = iw || i.width;
-        //多图时调用img1时，需要占满容器，单张图时使用图片宽度即可
-        pushImg(i, imgh);
+        var imgW = iw || i.width;
+        //多图时调用img1时，需要占满容器，单张图时使用图片宽度(宽度小于容器宽度时)即可
+        if (imgW > width) {
+            imgW = width;
+        }
+        else if (i.height > 600) {
+            imgW = (height / i.height) * i.width;
+        }
+        pushImg(i, imgW);
         addY(i.height);
     }
 
@@ -316,13 +322,13 @@ function layout(data) {
     }
 
     function addY(h) {
-        var add = parseInt(y) + parseInt(h) + 4;
+        var add = parseInt(y) + parseInt(h) + 2;
         if (add + pageH > 600) {
             nextPage();
         }
         else {
             y = add;
-            pageH += parseInt(h) + 4;
+            pageH += parseInt(h) + 2;
         }
     }
 
@@ -346,8 +352,9 @@ function layout(data) {
         if (parseInt(x) + parseInt(w) >= width) {
             x = 0;
         }
-        if ((imgh + pageH ) > height) {
-            if (height - pageH > 200) {
+        // 图片放入后的高度如果超出容器高度，且图片纵横比例不大于3，就将该图片自适应到该容器中
+        if ((imgh + pageH ) > height && (im.height / im.width) < 3) {
+            if (height - pageH > height * (1 / 3)) {
                 y = 0;
                 pageEnd = true;
                 w = (im.width / im.height) * (height - pageH - 10);
@@ -356,6 +363,10 @@ function layout(data) {
                 addY(imgh);
             }
         }
+        //如果纵横比大于3且容器剩余高度小于容器2/3的高度是，创建新页面
+        else if ((im.height / im.width) > 3 && height - pageH < height * (2 / 3)) {
+            nextPage();
+        }
         im.width = w;
         $(im).css('top', y + 'px');
         $(im).css('left', x + 'px');
@@ -363,7 +374,7 @@ function layout(data) {
         IC.appendChild(im);
         d.appendChild(IC);
         if (v !== 'no') {
-            x += parseInt(w) + 2;
+            x += parseInt(w) + 3;
         }
         if (pageEnd) {
             x = 0;
