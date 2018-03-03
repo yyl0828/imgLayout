@@ -360,7 +360,8 @@ function layout(data) {
             x = 0;
         }
         // 图片放入后的高度如果超出容器高度，且图片纵横比例不大于3，就将该图片自适应到该容器中
-        if ((imgh + pageH ) > height && (im.height / im.width) < 3) {
+        if (((imgh + pageH ) > height && (im.height / im.width) < 3)
+            ||((im.height / im.width) > 3)&& height - pageH > height * (2 / 3)) {
             if (height - pageH > height * (1 / 3)) {
                 y = 0;
                 pageEnd = true;
