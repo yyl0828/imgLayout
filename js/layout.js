@@ -98,9 +98,9 @@ let data = [
         "time": 1517134141
     },
     {
-        "text": "名花倾国两相欢",
+        "text": "名花倾国两相欢名花倾国两相欢名花倾国两相欢名花倾国两相欢名花倾国两相欢名花倾国两相欢名花倾国两相欢",
         "imgs": [],
-        "time": 1514743861
+        "time": 1485672333
     }
 ];
 var index = 0;//循环数组索引
@@ -111,7 +111,7 @@ function compute(d) {
     start(data[index], d).then(val => {
         if (index === data.length - 1) return;
         index++;
-        if ((data[index].text.trim() !== '' && val.pageH < (height - 100)) || (data[index].imgs.length !== 0 && val.pageH < (height - 200))) {
+        if ((data[index].imgs.length === 0 && val.pageH < (height - 100)) || (data[index].imgs.length !== 0 && val.pageH < (height - 200))) {
             //若该数组中文字不为空且页容器剩余高度大于100px或者该数组含有图片且页容器剩余高度大于200px，那么将这个页容器再重新利用，否则新创建页容器
             y += 30;
             pageH += 30;
@@ -208,6 +208,7 @@ function layout(data) {
     if (itemWord.trim() !== '') {
         if (imgs.length === 1) {
             setImg().then(re => {
+                console.log(re);
                 var g = setSvg('g', '', svg);
                 //计算剩余空间大概能放置的字数
                 var sideX = (width - re.x) / textWidth;
@@ -246,21 +247,21 @@ function layout(data) {
                             pageH = texty;
                         }
 
-                        if (textx >= (width - textWidth-2)) {
+                        if (textx >= (width - textWidth - 2)) {
                             if (pageH + txtHeight > height && oW) {
                                 nextPage();
                                 texty = 0;
                                 pageH = 0;
                             }
                             g = setSvg('g', '', svg);
-                            textx = xS+textWidth;
+                            textx = xS + textWidth;
                             texty += txtHeight;
                             oW ? pageH += txtHeight : '';
                             g.appendChild(text);
                             text.setAttribute('x', textx);
                             text.setAttribute('y', texty);
                         }
-                        else if (textx < (width - textWidth-2)) {
+                        else if (textx < (width - textWidth - 2)) {
                             g.appendChild(text);
                             text.setAttribute('x', textx);
                             text.setAttribute('y', texty);
@@ -282,8 +283,9 @@ function layout(data) {
                 var text = setSvg('text', '', '');
                 text.innerHTML = itemWord.charAt(i);
                 textx += textWidth;
+                if (i === 0) textx -= textWidth;
                 pageH = texty;
-                if (textx >= (width - textWidth-2)) {
+                if (textx >= (width - textWidth - 2)) {
                     if (pageH + txtHeight > height) {
                         nextPage();
                         texty = 0;
@@ -298,7 +300,7 @@ function layout(data) {
                     text.setAttribute('y', texty);
 
                 }
-                else if (textx < (width - textWidth-2)) {
+                else if (textx < (width - textWidth - 2)) {
                     g.appendChild(text);
                     text.setAttribute('x', textx);
                     text.setAttribute('y', texty);
@@ -455,6 +457,23 @@ function layout(data) {
                     });
                     addY(imageH);
                 }
+                else {
+                    var arrs = [];
+                    for (var key in re) {
+                        if (key === 'rect' || key === 'square') {
+                            for (var i = 0; i < re[key].length; i++) {
+                                arrs.push(re[key][i]);
+                            }
+                        }
+                    }
+                    var im1 = arrs[0];
+                    var im2 = arrs[1];
+                    if (dir === '' || dir === 'hor') {
+                        pushImg(im1.image, width * (im1.ratio / ( im2.ratio + im1.ratio)) - 2);
+                        pushImg(im2.image, width * (im2.ratio / ( im2.ratio + im1.ratio)) - 2);
+                        addY(im2.image.height);
+                    }
+                }
                 x = 0;
 
             }
@@ -464,9 +483,10 @@ function layout(data) {
                     Img1(imgs[0], width);
                     imgs.splice(0, 1);
                     Img3(imgs);
+
                 }
                 else {
-                    Img2(imgs);
+                    Img2([imgs[0], imgs[1]]);
                     imgs.splice(0, 2);
                     Img2(imgs);
                 }
@@ -501,11 +521,13 @@ function layout(data) {
                     Img4([imgs[0], imgs[1], imgs[2], imgs[3]]);
                     imgs.splice(0, 4);
                     Img5(imgs);
+
                 }
                 else {
                     Img6([imgs[0], imgs[1], imgs[2], imgs[3], imgs[4], imgs[5]]);
                     imgs.splice(0, 6);
                     Img3(imgs);
+
                 }
             }
 
@@ -552,7 +574,7 @@ function layout(data) {
             }
 
             function addY(h) {
-                var add = parseInt(y) + parseInt(h) + 2;
+                var add = parseInt(y) + parseInt(h) + 4;
                 if (add > 600) {
                     nextPage();
                 }
@@ -609,9 +631,9 @@ function layout(data) {
                 if (v !== 'no') {
                     x += parseInt(w) + 3;
                 }
-                if (pageEnd) {
+               /* if (pageEnd) {
                     x = 0;
-                }
+                }*/
             }
 
             resolve({hStart: hStart, hEnd: pageH, x: x});
