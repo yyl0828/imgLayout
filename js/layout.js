@@ -1,5 +1,6 @@
 let pageH = 0;
 const b = $('.pageContainer')[0];
+const ul = $('.pages')[0];
 let UV = document.createElement('div');
 UV.className = 'unvisible';
 b.appendChild(UV);
@@ -11,42 +12,96 @@ const width = 400;   //主体内容宽度 px
 const height = 600;  //主体内容高度 px
 const pathLength = 10 //边角虚框长度
 
+
 let d;
+let svg;
+let c;
 let data = [
+    /*   {
+           text: '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦' +
+           '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦',
+           imgs: [
+               'http://img1.timeface.cn/times/wx/9624df2cb41cfacf56057c14ff5e4531.jpg@198w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/90f0fdf772cc6e079d9c0263905548c8.jpg@133w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/cc93a3bca1a25c7a392cf6cbc0fc57f5.jpg@195w_4000h_1l_1pr_2o.jpg',
+               // 'http://img1.timeface.cn/times/wx/037dc969bc660c5583db2c99241cce1f.jpg@197w_4000h_1l_1pr_2o.jpg',
+               // 'http://img1.timeface.cn/times/wx/6fe88e53e70e661e583b48dbba8960f3.jpg@130w_4000h_1l_1pr_2o.jpg',
+               // 'http://img1.timeface.cn/times/wx/14f313ec954b59f1df2e6ec7682f05a7.jpg@130w_4000h_1l_1pr_2o.jpg',
+               // 'http://img1.timeface.cn/times/wx/182b8e2a6c92be3319c8c6b898378fcc.jpg@130w_4000h_1l_1pr_2o.jpg',
+               // 'http://img1.timeface.cn/times/wx/df2ddbb4b2c51214eb407e752cc41221.jpg@175w_4000h_1l_1pr_2o.jpg',
+               // 'http://img1.timeface.cn/times/wx/8624e1fb3114d75781e50348cb11d79e.jpg@796w_4000h_1l_1pr_2o.jpg'
+           ],
+           time: 1488878875,
+       },
+       {
+           "text": '一件小事，每当有那么一两个动作让你回忆起了以前',
+           time: 1489310875,
+           imgs: [
+               'http://img1.timeface.cn/times/wx/037dc969bc660c5583db2c99241cce1f.jpg@197w_4000h_1l_1pr_2o.jpg',
+           ]
+       },
+       {
+           "text": '一首歌，每当有那么一两句歌词触动了你心里的那根弦',
+           time: 1489310875,
+           imgs: [
+               'http://img1.timeface.cn/times/wx/037dc969bc660c5583db2c99241cce1f.jpg@197w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/6fe88e53e70e661e583b48dbba8960f3.jpg@130w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/14f313ec954b59f1df2e6ec7682f05a7.jpg@130w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/182b8e2a6c92be3319c8c6b898378fcc.jpg@130w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/df2ddbb4b2c51214eb407e752cc41221.jpg@175w_4000h_1l_1pr_2o.jpg',
+               'http://img1.timeface.cn/times/wx/8624e1fb3114d75781e50348cb11d79e.jpg@796w_4000h_1l_1pr_2o.jpg'
+           ]
+       },*/
     {
-        text: '今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦今天阳光明媚适合旅游哦',
-        imgs: [
-            'http://img1.timeface.cn/times/wx/9624df2cb41cfacf56057c14ff5e4531.jpg@198w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/90f0fdf772cc6e079d9c0263905548c8.jpg@133w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/cc93a3bca1a25c7a392cf6cbc0fc57f5.jpg@195w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/037dc969bc660c5583db2c99241cce1f.jpg@197w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/6fe88e53e70e661e583b48dbba8960f3.jpg@130w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/14f313ec954b59f1df2e6ec7682f05a7.jpg@130w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/182b8e2a6c92be3319c8c6b898378fcc.jpg@130w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/df2ddbb4b2c51214eb407e752cc41221.jpg@175w_4000h_1l_1pr_2o.jpg',
-            // 'http://img1.timeface.cn/times/wx/8624e1fb3114d75781e50348cb11d79e.jpg@796w_4000h_1l_1pr_2o.jpg'
-        ]
+        "text": "新年快乐，晚安~么么啾~",
+        "imgs": [
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCheiaKamgiaibes7VkbjewB3UKuSrxQ9GzPdDXBYKeLrIb3Xfugk8DDzVibPvvVibSR2Pc%2F0"
+        ],
+        "id": 450272,
+        "time": 1514743861
     },
-    /*    {
-            text: '一首歌，每当有那么一两句歌词触动了你心里的那根弦，你总会不轻易的就去喜欢上它。一件小' +
-            '。柔和的风吹过来似乎都告诉你说，这就是爱，这就是你可以消除一切烦恼的地方。”',
-            imgs: [
-                'img/214.png',
-                'http://img1.timeface.cn/times/wx/8624e1fb3114d75781e50348cb11d79e.jpg@796w_4000h_1l_1pr_2o.jpg'
-    //                'http://img1.timeface.cn/times/wx/230f8d9dcfdda09b9e5b68006a196e3c.jpg@197w_4000h_1l_1pr_2o.jpg',
-    //                'http://img1.timeface.cn/times/wx/230f8d9dcfdda09b9e5b68006a196e3c.jpg@197w_4000h_1l_1pr_2o.jpg',
-            ]
-        },
-        {
-            "text": '一首歌，每当有那么一两句歌词触动了你心里的那根弦，你总会不轻易的就去喜欢上它。一件小事，每当有那么一两个动作让你回忆起了以前，你总会默默的呆滞去回想。这些歌感人，这些事感动，这些所有都是感情！记得有这么一桥段：“其实那个山坡其实并不干净，那边的夜景其实也不美，可是总有两个人觉得那里就是世外桃源，就像是找到了一块充满了宝藏的地方。有倾诉者，就会有聆听者。柔和的风吹过来似乎都告诉你说，这就是爱，这就是你可以消除一切烦恼的地方。”\n' +
-            '　　直到有一天，你也会为人父母。当你看到自己的孩子哇哇降世，你总会爱不释手。无论这个小生命做了什么，你都会觉得他是那样的惹人怜爱，是那样的美。当他一天天长大，在你眼里他犯的错，他有的毛病，他有过的胜利，他有过的点点滴滴，你总会帮他总结，帮他在翅膀丰腴之前默默的付出。记得有这样的一个故事：“其实这个房子并不豪华，那里的生活条件其实也不富裕，可是那一家人生活的非常幸福快乐，每个成员都知道这是他们翅膀的落脚点，飞累了就能回来得' +
-            '到微笑。有哭泣，就会有安慰你的人。热乎乎的饭菜都想告诉你说，这就是家，这就是你可以得到幸福的地方。”' +
-            '一桌麻将圈围着四个老人，香烟还是时不时的点着。每当摸到一张自己不要牌还是会拧起眉头。看着身边的朋友们，你总会觉得自己并不孤单。当我们牵手走过，一起风雨无阻的相互扶持，你会为他高兴为他庆贺每一次他的成功，为他悲伤每一次的不如意，在别人的生命中也留下自己的脚印。记得有这样的朋友：“其实他们并不是各个都家产百万，他们的工作其实也不是最好的，可是当有个人遇到苦难总会有那么一些手默默的伸出来帮助你，希' +
-            '望你也能跟他们一样顺顺利利，这就是朋友，这是你一辈子都离不开的一些人。' +
-            '其实这个房子并不豪华，那里的生活条件其实也不富裕，可是那一家人生活的非常幸福快乐，每个成员都知道这是他们翅膀的落脚点，飞累了就能回来得到微笑。有哭泣，' +
-            '就会有安慰你的人。热乎乎的饭菜都想告诉你说，这就是家，这就是你可以得到幸福的地方。',
-            imgs: []
-        }*/
+    {
+        "text": "唯有美食以相聚",
+        "imgs": [
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXhDVibkDeclStt18jGKbarFeHqF6icsbsHvBz0APXJ9rOuTmDpS4nPMpI%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXhDVibkDeclStOyjficFomHEnYfp76MnBMerAnNhb2kiaqmleJyIy9UTbY%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXhDVibkDeclStlLibZDa0xXX3P2G8OwtNj5OSShDGZ13uUMibN48VicYTqY%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXpRMWBrrkXQy0CvYChgnXlh7JjfWVcAibZMibWHHJSqfL4j0jJ9h1wado%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXpRMWBrrkXQyHmNyU6WXaibW6P77Hu0icmj0uib2W7oDhHQeFWQrVUmIOc%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXpRMWBrrkXQyAuLnMoeDOjRQumBc2T8l79RiaOgpvYaT8RHws9Fl4LnQ%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXpRMWBrrkXQypHU9PKkn8ZFlibq311iaoBibJ2FZ38ic7Hias2vNt1ibmgB1g%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXpRMWBrrkXQyjkspyNagib0thsTv8UgS40eLKRF5v6ibXhYPZuyEVsqeo%2F0",
+            "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXuwBzW9MvznXibPH7MkIQ2EBdgOP7icdZqsE2hdlToK7MwH19dzhpeeiao%2F0",
+        ],
+        "time": 1515817993
+    },
+    {
+        "text": "冬天里来煮个火锅↵↵也是极好的",
+        "imgs": ["https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCVxxtugdbkXrlFb87HnPzXkrNB1yQcVwFLdFf9RM1vs4wD6zS9VAGfgEFldQ4s040%2F0",],
+        "time": 1517134141
+    },
+    {
+        "text": "名花倾国两相欢",
+        "imgs": [],
+        "time": 1514743861
+    }
 ];
 var index = 0;//循环数组索引
 compute();
@@ -58,26 +113,13 @@ function compute(d) {
         index++;
         if ((data[index].text.trim() !== '' && val.pageH < (height - 100)) || (data[index].imgs.length !== 0 && val.pageH < (height - 200))) {
             //若该数组中文字不为空且页容器剩余高度大于100px或者该数组含有图片且页容器剩余高度大于200px，那么将这个页容器再重新利用，否则新创建页容器
-            var fillHeight = pageH;
-            if (val.con.innerHTML.indexOf('fillDiv') > 0) {
-                //若在同一页中已经含有填充元素，下一个填充元素的高度应该首先减去上一个填充元素的高度
-                var fillH = $('div .fillDiv:last').height();
-                fillHeight = pageH - parseInt(fillH);
-            }
-
-            var all = $(val.con).children();
-            for (var i = 0; i < all.length; i++) {
-                if (all[i].className == 'imgTxt' || all[i].className == 'itemWord') {
-                    fillHeight -= $(all[i]).height() + 5;
-                    //减去文字容器所占高度  （*隐患部分）
-                }
-            }
-            $(val.con).append('<div class="fillDiv" style="height: ' + fillHeight + 'px;width: 100%"></div>');
-            y = 0;
+            y += 30;
+            pageH += 30;
             compute(val.con);
         }
         else {
             pageH = 0;
+            y = 0;
             compute();
         }
     });
@@ -88,9 +130,27 @@ function start(data, con) {
     var re = 8;
 
     if (typeof(con) == "undefined") {
+
+        c = document.createElement('li');
+        c.className = 'pageItem'; //页容器
+        ul.appendChild(c);
+
+        var foot = document.createElement('footer');
+        foot.className = 'footer'; //页容器
+        c.appendChild(foot);
+        $(foot).html('<hr/> <div class="footDate">2017/08</div><div class="pagination">4</div><div class="bookName">绵绵</div>');
+
         d = document.createElement('div');
         d.className = 'pageCenter'; //页容器
-        b.appendChild(d);
+        c.appendChild(d);
+
+        svg = setSvg('svg', {
+            xmlns: 'http://www.w3.org/2000/svg',
+            version: '1.1',
+            width: width,
+            height: height
+        }, d);
+
     }
     else {
         d = con;
@@ -111,7 +171,7 @@ function start(data, con) {
             //当全部图片加载完成后再执行layout函数
             if (IMARR.length === imgs.length) {
                 try {
-                    re = layout({text: data.text, imgs: IMARR});
+                    re = layout({text: data.text, imgs: IMARR, time: data.time});
                     clearInterval(check);
                     resolve(re);
                 } catch (e) {
@@ -126,25 +186,25 @@ function start(data, con) {
 
 }
 
+//创建svg元素，tag标签名称,attr需设置的属性（对象形式），parEle创建元素的父容器
+function setSvg(tag, attr, parEle) {
+    var ele = $(document.createElementNS('http://www.w3.org/2000/svg', tag));
+    if (attr !== '') {
+        for (var key in attr) {
+            ele.attr(key, attr[key]);
+        }
+    }
+    if (parEle) parEle.appendChild(ele[0]);
+    return ele[0];
+}
 
 function layout(data) {
     const itemWord = data.text;
     const imgs = data.imgs;
+    const time = data.time;
     let IC = document.createElement('div');
     IC.className = 'imgContainer'; //图片容器
-
-    let s = document.createElement('span');
-    s.className = 'itemWord';
-
-    s.innerText = itemWord;
-
-    let svg = setSvg('svg', {
-        xmlns: 'http://www.w3.org/2000/svg',
-        version: '1.1',
-        width: width,
-        height: height
-    }, d);
-
+    setTime();
     if (itemWord.trim() !== '') {
         if (imgs.length === 1) {
             setImg().then(re => {
@@ -153,21 +213,17 @@ function layout(data) {
                 var sideX = (width - re.x) / textWidth;
                 var sideY = (re.hEnd - re.hStart) / txtHeight;
                 if (itemWord.length < sideX * sideY) {
-                    var yS = (sideY - Math.ceil(itemWord.length / sideX)) * txtHeight / 2;
+                    var yS = ((sideY - Math.ceil(itemWord.length / sideX)) * txtHeight / 2) + re.hStart;
                     pushTxt(re.x, yS, false, 0);
-                    var pathPos = 'M' + (width - pathLength) + ' ' + parseInt(re.hStart) + ' L' + width + ' ' + parseInt(re.hStart)
-                        + ' L' + width + ' ' + (parseInt(re.hStart) + pathLength);
-                    setSvg('path', {d: pathPos}, svg);
-                    pathPos = 'M' + (width - pathLength) + ' ' + parseInt(re.hEnd) + ' L' + width + ' ' + parseInt(re.hEnd)
-                        + ' L' + width + ' ' + (parseInt(re.hEnd) - pathLength);
-                    setSvg('path', {d: pathPos}, svg);
+                    setPath(width - 2, re.hStart, 'RT');
+                    setPath(width - 2, re.hEnd, 'RB');
                 }
                 else {
                     //图片旁边放置满后，将x置为0，重新从上次结束位置开始放置
                     new Promise((resolve, reject) => {
-                        pushTxt(re.x - 10, re.hStart + 15, 0, false, resolve);
+                        pushTxt(re.x, re.hStart + 15, 0, false, resolve);
                     }).then(val => {
-                        pushTxt(10, re.hEnd + txtHeight, true, val);
+                        pushTxt(0, re.hEnd + txtHeight, true, val);
                     });
                 }
 
@@ -190,13 +246,21 @@ function layout(data) {
                             pageH = texty;
                         }
 
-                        if (textx > 390) {
+                        if (textx >= (width - textWidth-2)) {
+                            if (pageH + txtHeight > height && oW) {
+                                nextPage();
+                                texty = 0;
+                                pageH = 0;
+                            }
                             g = setSvg('g', '', svg);
-                            textx = xS;
+                            textx = xS+textWidth;
                             texty += txtHeight;
                             oW ? pageH += txtHeight : '';
+                            g.appendChild(text);
+                            text.setAttribute('x', textx);
+                            text.setAttribute('y', texty);
                         }
-                        else if (textx < 390) {
+                        else if (textx < (width - textWidth-2)) {
                             g.appendChild(text);
                             text.setAttribute('x', textx);
                             text.setAttribute('y', texty);
@@ -205,77 +269,69 @@ function layout(data) {
                     }
                 }
 
+                //svg元素设置文字
+                //xS，yS,x,y轴文字开始位置  oW左边是否无图片 fS for循环开始数字,resolve为Promise参数
 
             });
         }
         else {
-            d.appendChild(s);
-            txtEnd();
-        }
+            var g = setSvg('g', '', svg);
+            var textx = 0;
+            var texty = pageH + txtHeight;
+            for (var i = 0; i < itemWord.length; i++) {
+                var text = setSvg('text', '', '');
+                text.innerHTML = itemWord.charAt(i);
+                textx += textWidth;
+                pageH = texty;
+                if (textx >= (width - textWidth-2)) {
+                    if (pageH + txtHeight > height) {
+                        nextPage();
+                        texty = 0;
+                        pageH = 0;
+                    }
+                    g = setSvg('g', '', svg);
+                    textx = 0;
+                    texty += txtHeight;
+                    pageH += txtHeight;
+                    g.appendChild(text);
+                    text.setAttribute('x', textx);
+                    text.setAttribute('y', texty);
 
-    }
+                }
+                else if (textx < (width - textWidth-2)) {
+                    g.appendChild(text);
+                    text.setAttribute('x', textx);
+                    text.setAttribute('y', texty);
+                }
 
-
-    //创建svg元素，tag标签名称,attr需设置的属性（对象形式），parEle创建元素的父容器
-    function setSvg(tag, attr, parEle) {
-        var ele = $(document.createElementNS('http://www.w3.org/2000/svg', tag));
-        if (attr !== '') {
-            for (var key in attr) {
-                ele.attr(key, attr[key]);
             }
-        }
-        if (parEle) parEle.appendChild(ele[0]);
-        return ele[0];
-    }
+            y = pageH + txtHeight;
+            pageH += txtHeight;
 
-    function txtEnd() {
-        var txth = $(s).outerHeight(true);
-        if (height - pageH < txtHeight) {
-            nextPage();
-        }
-        if (txth < height - pageH) {
-            pageH += $(s).outerHeight(true);
-            d.appendChild(s);
-        }
-        else {
-            /*如果文字在当前页面放不下需要分成两页，将文字转换成BASE64编码图像，
-            设置成div背景图并进行裁剪显示
-             */
-            var imgTxt = document.createElement('div');
-            imgTxt.className = 'imgTxt';
-            d.appendChild(imgTxt);
-
-            toImg(s).then(val => {
-                $(imgTxt).css('background-image', 'url(' + val + ')');
-                var endH = Math.floor((height - pageH) / txtHeight) * txtHeight;
-                $(imgTxt).css('height', endH);
-
-                //数据恢复初始化，重新创建页面
-                nextPage();
-
-                var imgTxt2 = document.createElement('div');
-                imgTxt2.className = 'imgTxt';
-                d.appendChild(imgTxt2);
-                $(imgTxt2).css('background-image', 'url(' + val + ')');
-                $(imgTxt2).css('height', Math.floor((txth - endH) / txtHeight) * txtHeight);
-                $(imgTxt2).css('background-position', 'left bottom');
-                pageH += $(imgTxt2).height();
-
-            });
-
+            setImg();
         }
     }
 
-    function toImg(item) {
-        return new Promise((resolve, reject) => {
-            html2canvas(item).then(canvas => {
-                var img = canvas.toDataURL("image/png");
-                $($(d.lastChild).prev()).remove();
-                resolve(img);
-            });
-        });
+    function setTime() {
+        var div = document.createElement('div');
+        var date = new Date(parseInt(time) * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var h = y;
+        var day = fillIn(date.getDate().toString());
+        var hour = fillIn(date.getHours().toString());
+        var minute = fillIn(date.getMinutes().toString());
 
+        $(div).html('<div class="date" style="top:' + (h + 40) + 'px;left:20px">' + day + '</div>' +
+            '<div class="time" style="top:' + (h + 67 ) + 'px;left:20px">' + hour + ':' + minute + '</div>');
+        c.appendChild(div);
     }
+
+    function fillIn(str) {
+        if (str.length === 1) {
+            str = '0' + str;
+        }
+        return str;
+    }
+
 
     function setImg() {
         return new Promise((resolve, reject) => {
@@ -317,7 +373,7 @@ function layout(data) {
                 var imgW = iw || i.width;
                 //多图时调用img1时，需要占满容器，单张图时使用图片宽度(宽度小于容器宽度时)即可
                 if (imgW > width) {
-                    imgW = width;
+                    imgW = width - 150;
                 }
                 else if (i.height > 600) {
                     imgW = (height / i.height) * i.width;
@@ -464,7 +520,14 @@ function layout(data) {
                     var ratio = im.width / im.height;
                     if (ratio < 0.5 || ratio > 1.6) { //图片宽度百分百
                         pushImg(im, width);
-                        addY(im.height);
+                        if (im.className.indexOf('rotateImg') > 0) {
+                            var h = parseInt(im.height) + parseInt($(im).css('top')) * 2;
+                            addY(h);
+                        }
+                        else {
+                            addY(im.height);
+                        }
+
                         re.full.push({ratio: ratio, image: im});
                     } else if ((ratio >= 0.5 && ratio <= 0.8) || (ratio >= 1.2 && ratio <= 1.6)) {
                         re.rect.push({ratio: ratio, image: im}); //图片宽度按照比例计算
@@ -490,7 +553,7 @@ function layout(data) {
 
             function addY(h) {
                 var add = parseInt(y) + parseInt(h) + 2;
-                if (add + pageH > 600) {
+                if (add > 600) {
                     nextPage();
                 }
                 else {
@@ -499,31 +562,16 @@ function layout(data) {
                 }
             }
 
-            function nextPage() {
-                y = 0;
-                x = 0;
-                pageH = 0;
-                IC = document.createElement('div');
-                IC.className = 'imgContainer'; //图片容器
-
-                d = document.createElement('div');
-                d.className = 'pageCenter'; //页容器
-
-                b.appendChild(d);
-                d.appendChild(IC);
-            }
 
             function pushImg(im, w, v) {
                 var pageEnd = false;
                 var imgh = (im.height / im.width) * w;
-                if (parseInt(x) + parseInt(w) >= width) {
-                    x = 0;
-                }
+                //1.底部自适应
                 // 图片放入后的高度如果超出容器高度，且图片纵横比例不大于3，就将该图片自适应到该容器中
                 if (((imgh + pageH ) > height && (im.height / im.width) < 3)
                     || ((im.height / im.width) > 3) && height - pageH > height * (2 / 3)) {
                     if (height - pageH > height * (1 / 3)) {
-                        y = 0;
+                        // y = 0;
                         pageEnd = true;
                         w = (im.width / im.height) * (height - pageH - 10);
                     }
@@ -535,10 +583,27 @@ function layout(data) {
                 else if ((im.height / im.width) > 3 && height - pageH < height * (2 / 3)) {
                     nextPage();
                 }
+                //2.图片宽度为满屏且纵横比不是过大时，设置四角虚框
+                if (w === width && (im.height / im.width) < 1.9 && (im.height / im.width) > 0.6 && imgs.length !== 1) {
+                    setPath(2, y, 'LT');
+                    setPath(width - 2, y, 'RT');
+                    setPath(2, y + imgh, 'LB');
+                    setPath(width - 2, y + imgh, 'RB');
+                    w = width - 100;
+                    x = (width - w) / 2;
+                    y += (((width / w) - 1) * (im.height / im.width) * w) / 2;
+                    $(im).css('transform', 'rotate(3deg)');
+                    im.className += ' rotateImg';
+                }
+
+                if (parseInt(x) + parseInt(w) >= width) {
+                    x = 0;
+                }
                 im.width = w;
                 $(im).css('top', y + 'px');
                 $(im).css('left', x + 'px');
                 dImgs.push(im);
+                im.className += ' img';
                 IC.appendChild(im);
                 d.appendChild(IC);
                 if (v !== 'no') {
@@ -551,6 +616,58 @@ function layout(data) {
 
             resolve({hStart: hStart, hEnd: pageH, x: x});
         })
+    }
+
+    function nextPage() {
+        y = 0;
+        x = 0;
+        pageH = 0;
+        IC = document.createElement('div');
+        IC.className = 'imgContainer'; //图片容器
+
+        c = document.createElement('li');
+        c.className = 'pageItem'; //页容器
+        ul.appendChild(c);
+
+        var foot = document.createElement('footer');
+        foot.className = 'footer'; //页容器
+        c.appendChild(foot);
+        $(foot).html('<hr/> <div class="footDate">2017/08</div><div class="pagination">4</div><div class="bookName">绵绵</div>');
+
+        d = document.createElement('div');
+        d.className = 'pageCenter'; //页容器
+
+        svg = setSvg('svg', {
+            xmlns: 'http://www.w3.org/2000/svg',
+            version: '1.1',
+            width: width,
+            height: height
+        }, d);
+
+        c.appendChild(d);
+        d.appendChild(IC);
+    }
+
+    function setPath(px, py, type) {
+        var pathPos;
+        //type path的位置左上左下右上右下，传入px,py为角坐标
+        switch (type) {
+            case 'LT':
+                pathPos = 'M' + px + ' ' + (py + pathLength) + ' L' + px + ' ' + py + ' L' + (px + pathLength) + ' ' + py;
+                break;
+            case 'RT':
+                pathPos = 'M' + px + ' ' + (py + pathLength) + ' L' + px + ' ' + py + ' L' + (px - pathLength) + ' ' + py;
+                break;
+            case 'LB':
+                pathPos = 'M' + px + ' ' + (py - pathLength) + ' L' + px + ' ' + py + ' L' + (px + pathLength) + ' ' + py;
+                break;
+            case 'RB':
+                pathPos = 'M' + px + ' ' + (py - pathLength) + ' L' + px + ' ' + py + ' L' + (px - pathLength) + ' ' + py;
+                break;
+            default:
+                break;
+        }
+        setSvg('path', {d: pathPos, 'stroke-width': 2, 'stroke': '#aaa', 'fill': 'transparent'}, svg);
     }
 
     x = 0;
