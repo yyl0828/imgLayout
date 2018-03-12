@@ -780,7 +780,7 @@ function layout2(data) {
         var g = setSvg('g', '', svg);
         var textx = x;
         var texty = pageH + txtHeight;
-        var edge = x+width / 2 - textWidth - 2;
+        var edge = x + width / 2 - textWidth - 2;
         for (var i = 0; i < itemWord.length; i++) {
             var text = setSvg('text', '', '');
             text.innerHTML = itemWord.charAt(i);
