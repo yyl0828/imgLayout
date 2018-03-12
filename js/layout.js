@@ -8,9 +8,10 @@ let IMARR = []; //存放数组图像全局变量
 let x = 0, y = 0; //图片位置坐标，一页内，另起一页后清零
 const txtHeight = 19; //文字行高
 const textWidth = 15;
-const width = 400;   //主体内容宽度 px
-const height = 600;  //主体内容高度 px
-const pathLength = 10 //边角虚框长度
+let width;   //主体内容宽度 px
+let height;  //主体内容高度 px
+const pathLength = 10; //边角虚框长度
+let layoutStyle = 'layout-2';
 
 
 let d;
@@ -70,7 +71,7 @@ let data = [
            ]
        },*/
     {
-        "text": "新年快乐，晚安~么么啾~",
+        "text": "新年快乐，晚安~么么啾~啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊",
         "imgs": [
             "https://weixinshu.com/images/fetch?url=http%3A%2F%2Fshmmsns.qpic.cn%2Fmmsns%2F1LlgQzJVOyCheiaKamgiaibes7VkbjewB3UKuSrxQ9GzPdDXBYKeLrIb3Xfugk8DDzVibPvvVibSR2Pc%2F0"
         ],
@@ -111,16 +112,31 @@ function compute(d) {
     start(data[index], d).then(val => {
         if (index === data.length - 1) return;
         index++;
-        if ((data[index].imgs.length === 0 && val.pageH < (height - 100)) || (data[index].imgs.length !== 0 && val.pageH < (height - 200))) {
-            //若该数组中文字不为空且页容器剩余高度大于100px或者该数组含有图片且页容器剩余高度大于200px，那么将这个页容器再重新利用，否则新创建页容器
-            y += 30;
-            pageH += 30;
-            compute(val.con);
+        if (layoutStyle === 'layout-1') {
+            if ((data[index].imgs.length === 0 && val.pageH < (height - 100)) || (data[index].imgs.length !== 0 && val.pageH < (height - 200))) {
+                //若该数组中文字不为空且页容器剩余高度大于100px或者该数组含有图片且页容器剩余高度大于200px，那么将这个页容器再重新利用，否则新创建页容器
+                y += 30;
+                pageH += 30;
+                compute(val.con);
+            }
+            else {
+                pageH = 0;
+                y = 0;
+                compute();
+            }
         }
-        else {
-            pageH = 0;
-            y = 0;
-            compute();
+        else if (layoutStyle === 'layout-2') {
+            if ((data[index].imgs.length === 0 && val.pageH < (height - 100)) || (data[index].imgs.length !== 0 && val.pageH < (height - 200)) || x < width / 2) {
+                //若该数组中文字不为空且页容器剩余高度大于100px或者该数组含有图片且页容器剩余高度大于200px，那么将这个页容器再重新利用，否则新创建页容器
+                y += 10;
+                pageH += 10;
+                compute(val.con);
+            }
+            else {
+                pageH = 0;
+                y = 0;
+                compute();
+            }
         }
     });
 }
@@ -132,7 +148,7 @@ function start(data, con) {
     if (typeof(con) == "undefined") {
 
         c = document.createElement('li');
-        c.className = 'pageItem'; //页容器
+        c.className = 'pageItem ' + layoutStyle; //页容器
         ul.appendChild(c);
 
         var foot = document.createElement('footer');
@@ -143,6 +159,9 @@ function start(data, con) {
         d = document.createElement('div');
         d.className = 'pageCenter'; //页容器
         c.appendChild(d);
+
+        height = $('.' + layoutStyle + ' .pageCenter').height();
+        width = $('.' + layoutStyle + ' .pageCenter').width();
 
         svg = setSvg('svg', {
             xmlns: 'http://www.w3.org/2000/svg',
@@ -171,7 +190,13 @@ function start(data, con) {
             //当全部图片加载完成后再执行layout函数
             if (IMARR.length === imgs.length) {
                 try {
-                    re = layout({text: data.text, imgs: IMARR, time: data.time});
+                    if (layoutStyle === 'layout-1') {
+                        re = layout1({text: data.text, imgs: IMARR, time: data.time});
+                    }
+                    else if (layoutStyle === 'layout-2') {
+                        re = layout2({text: data.text, imgs: IMARR, time: data.time});
+                    }
+
                     clearInterval(check);
                     resolve(re);
                 } catch (e) {
@@ -198,7 +223,15 @@ function setSvg(tag, attr, parEle) {
     return ele[0];
 }
 
-function layout(data) {
+//日期补零
+function fillIn(str) {
+    if (str.length === 1) {
+        str = '0' + str;
+    }
+    return str;
+}
+
+function layout1(data) {
     const itemWord = data.text;
     const imgs = data.imgs;
     const time = data.time;
@@ -325,14 +358,6 @@ function layout(data) {
             '<div class="time" style="top:' + (h + 67 ) + 'px;left:20px">' + hour + ':' + minute + '</div>');
         c.appendChild(div);
     }
-
-    function fillIn(str) {
-        if (str.length === 1) {
-            str = '0' + str;
-        }
-        return str;
-    }
-
 
     function setImg() {
         return new Promise((resolve, reject) => {
@@ -671,35 +696,6 @@ function layout(data) {
         })
     }
 
-    function nextPage() {
-        y = 0;
-        x = 0;
-        pageH = 0;
-        IC = document.createElement('div');
-        IC.className = 'imgContainer'; //图片容器
-
-        c = document.createElement('li');
-        c.className = 'pageItem'; //页容器
-        ul.appendChild(c);
-
-        var foot = document.createElement('footer');
-        foot.className = 'footer'; //页容器
-        c.appendChild(foot);
-        $(foot).html('<hr/> <div class="footDate">2017/08</div><div class="pagination">4</div><div class="bookName">绵绵</div>');
-
-        d = document.createElement('div');
-        d.className = 'pageCenter'; //页容器
-
-        svg = setSvg('svg', {
-            xmlns: 'http://www.w3.org/2000/svg',
-            version: '1.1',
-            width: width,
-            height: height
-        }, d);
-
-        c.appendChild(d);
-        d.appendChild(IC);
-    }
 
     function setPath(px, py, type) {
         var pathPos;
@@ -726,6 +722,204 @@ function layout(data) {
     x = 0;
     IMARR = [];
 
+    return ({pageH: pageH, con: d});
+}
+
+function nextPage() {
+    y = 0;
+    x = 0;
+    pageH = 0;
+    IC = document.createElement('div');
+    IC.className = 'imgContainer'; //图片容器
+
+    c = document.createElement('li');
+    c.className = 'pageItem ' + layoutStyle; //页容器
+    ul.appendChild(c);
+
+    var foot = document.createElement('footer');
+    foot.className = 'footer'; //页容器
+    c.appendChild(foot);
+    $(foot).html('<hr/> <div class="footDate">2017/08</div><div class="pagination">4</div><div class="bookName">绵绵</div>');
+
+    d = document.createElement('div');
+    d.className = 'pageCenter'; //页容器
+
+    svg = setSvg('svg', {
+        xmlns: 'http://www.w3.org/2000/svg',
+        version: '1.1',
+        width: width,
+        height: height
+    }, d);
+
+    c.appendChild(d);
+    d.appendChild(IC);
+}
+
+function layout2(data) {
+    const itemWord = data.text;
+    let imgs = data.imgs;
+    const time = data.time;
+
+
+    let IC = document.createElement('div');
+    IC.className = 'imgContainer'; //图片容器
+
+    if (y > height - 30 && x < width / 2) {
+        x = width / 2 + 10;
+        y = 0;
+        pageH = 0;
+    }
+    setTime();
+    setTxt();
+    if (imgs.length > 0) {
+        setImg();
+    }
+
+
+    function setTxt() {
+        var g = setSvg('g', '', svg);
+        var textx = x;
+        var texty = pageH + txtHeight;
+        var edge = x+width / 2 - textWidth - 2;
+        for (var i = 0; i < itemWord.length; i++) {
+            var text = setSvg('text', '', '');
+            text.innerHTML = itemWord.charAt(i);
+            textx += textWidth;
+            if (i === 0) textx -= textWidth;
+            pageH = texty;
+            if (textx >= edge) {
+                if (pageH + txtHeight > height) {
+                    if (x < width / 2) {
+                        x = width / 2 + 10;
+                        y = 0;
+                        pageH = 0;
+                    }
+                    else {
+                        nextPage();
+                    }
+                    texty = 0;
+                    pageH = 0;
+                }
+                g = setSvg('g', '', svg);
+                textx = x;
+                texty += txtHeight;
+                pageH += txtHeight;
+                g.appendChild(text);
+                text.setAttribute('x', textx);
+                text.setAttribute('y', texty);
+
+            }
+            else if (textx < edge) {
+                g.appendChild(text);
+                text.setAttribute('x', textx);
+                text.setAttribute('y', texty);
+            }
+
+        }
+        y = pageH + 8;
+        pageH += 8;
+
+    }
+
+    function setTime() {
+        var div = document.createElement('div');
+        var date = new Date(parseInt(time) * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var h = y;
+        var day = fillIn(date.getDate().toString());
+        var hour = fillIn(date.getHours().toString());
+        var minute = fillIn(date.getMinutes().toString());
+
+        var g = setSvg('g', '', svg);
+        setSvg('rect', {x: x, y: y, rx: 2, ry: 2, fill: '#ca5858', width: 30, height: 30}, g);
+        var textD = setSvg('text', {'class': 'date', x: x + 6, y: y + 20, fill: '#fff'}, g);
+        textD.innerHTML = day;
+        setSvg('rect', {x: x + 190, y: y + 5, rx: 4, ry: 4, fill: '#aaa', width: 40, height: 23}, g);
+        var textH = setSvg('text', {'class': 'time', x: x + 195, y: y + 20, fill: '#fff'}, g);
+        textH.innerHTML = hour + ':' + minute;
+        y += 30;
+        pageH += 30;
+
+    }
+
+    function setImg() {
+
+        for (var i = 0; i < imgs.length; i++) {
+            checkImg(i);
+        }
+
+        function checkImg(i) {
+            var im = imgs[i];
+            var ratio = im.height / im.width;
+            im.width = width / 2 - 20;
+            im.height = im.width * ratio;
+            if (y + im.height > height) {
+                if (x < width / 2) {
+                    x = width / 2 + 10;
+                    y = 0;
+                    pageH = 0;
+
+                    $(im).css('top', y + 'px');
+                    $(im).css('left', x + 'px');
+                    im.className += ' img';
+                    IC.appendChild(im);
+                    d.appendChild(IC);
+                    y += im.height + 2;
+                    pageH += im.height + 2;
+                }
+                else {
+                    //nextpage函数
+                    y = 0;
+                    x = 0;
+                    pageH = 0;
+                    IC = document.createElement('div');
+                    IC.className = 'imgContainer'; //图片容器
+
+                    c = document.createElement('li');
+                    c.className = 'pageItem ' + layoutStyle; //页容器
+                    ul.appendChild(c);
+
+                    var foot = document.createElement('footer');
+                    foot.className = 'footer'; //页容器
+                    c.appendChild(foot);
+                    $(foot).html('<hr/> <div class="footDate">2017/08</div><div class="pagination">4</div><div class="bookName">绵绵</div>');
+
+                    d = document.createElement('div');
+                    d.className = 'pageCenter'; //页容器
+
+                    svg = setSvg('svg', {
+                        xmlns: 'http://www.w3.org/2000/svg',
+                        version: '1.1',
+                        width: width,
+                        height: height
+                    }, d);
+
+                    c.appendChild(d);
+                    d.appendChild(IC);
+
+                    $(im).css('top', y + 'px');
+                    $(im).css('left', x + 'px');
+                    im.className += ' img';
+                    IC.appendChild(im);
+                    d.appendChild(IC);
+                    y += im.height + 2;
+                    pageH += im.height + 2;
+                }
+            }
+            else {
+                $(im).css('top', y + 'px');
+                $(im).css('left', x + 'px');
+                im.className += ' img';
+                IC.appendChild(im);
+                d.appendChild(IC);
+                y += im.height + 2;
+                pageH += im.height + 2;
+            }
+
+        }
+
+    }
+
+    IMARR = [];
     return ({pageH: pageH, con: d});
 }
 

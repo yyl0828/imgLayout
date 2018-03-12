@@ -4,37 +4,13 @@
     <meta charset="UTF-8">
     <title>图文排版</title>
     <style>
-        .pageCenter {
-            position: relative;
-            width: 400px;
-            height: 600px;
-            /*border: 1px solid red;*/
-            margin-top: 2px;
-            background: white;
-            display: inline-block;
-        }
-
         .img {
             position: absolute;
             /*border: 2px solid white;*/
         }
 
-        .itemWord {
-            margin: 4px 0;
-            display: inline-block;
-            font-size: 14px;
-        }
-
-        .imgContainer {
-            /*position: relative;*/
-        }
-
         .unvisible {
             display: none;
-        }
-
-        .imgTxt {
-            background-size: cover;
         }
 
         body {
@@ -58,13 +34,40 @@
             max-width: 600px;
         }
 
+        .layout-1 .pageCenter {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            margin-top: 2px;
+            background: white;
+            display: inline-block;
+        }
+
+        .pageItem.layout-1 .date {
+            font-size: 1.5em;
+            color: #ca5858;
+            position: absolute;
+            width: 45px;
+            text-align: center;
+        }
+
+        .pageItem.layout-1 .time {
+            background-color: #ca5858;
+            line-height: 20px;
+            position: absolute;
+            width: 45px;
+            color: white;
+            padding: 3px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
         .pageItem {
             -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
             box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
             display: inline-block;
             position: relative;
             font-size: 14px;
-            padding: 50px 50px 50px 100px;
             background-color: #fff;
             margin: 0 5px 14px;
             overflow: hidden;
@@ -72,6 +75,46 @@
             text-align: center;
             vertical-align: top;
             word-spacing: 0;
+        }
+
+        .layout-1 {
+            padding: 50px 50px 50px 100px;
+        }
+
+        .layout-2 {
+            padding:40px;
+        }
+
+        .layout-2 .pageCenter {
+            position: relative;
+            width: 480px;
+            height: 700px;
+            margin-top: 2px;
+            background: white;
+            display: inline-block;
+        }
+
+        .pageItem.layout-2 .date {
+            position: relative;
+            background-color: #ca5858;
+            color: #fff;
+            text-align: left;
+            padding: 0 .3em;
+            font-size: 16px;
+            border-radius: 2px;
+            top: -2px;
+            line-height: 22px;
+        }
+
+        .pageItem.layout-2 .time {
+            float: right;
+            width: 40px;
+            font-size: 12px;
+            position: static;
+            line-height: 20px;
+            border-radius: 2px;
+            background-color: #aaa;
+            color: #fff;
         }
 
         .footer {
@@ -135,23 +178,6 @@
             border-bottom: 1px solid #ddd;
         }
 
-        .pageItem .date{
-            font-size: 1.5em;
-            color: #ca5858;
-            position: absolute;
-            width: 45px;
-            text-align: center;
-        }
-        .pageItem .time{
-            background-color: #ca5858;
-            line-height: 20px;
-            position: absolute;
-            width: 45px;
-            color: white;
-            padding: 3px 0;
-            border-radius: 5px;
-            font-size: 0.9em;
-        }
     </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false"> 　
