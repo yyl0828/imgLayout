@@ -208,15 +208,14 @@ function layout(data) {
     if (itemWord.trim() !== '') {
         if (imgs.length === 1) {
             setImg().then(re => {
-                console.log(re);
                 var g = setSvg('g', '', svg);
-                //计算剩余空间大概能放置的字数
+                //计算图片旁边剩余空间大概能放置的字数
                 var sideX = (width - re.x) / textWidth;
                 var sideY = (re.hEnd - re.hStart) / txtHeight;
                 if (itemWord.length < sideX * sideY) {
                     var yS = ((sideY - Math.ceil(itemWord.length / sideX)) * txtHeight / 2) + re.hStart;
                     pushTxt(re.x, yS, false, 0);
-                    setPath(width - 2, re.hStart, 'RT');
+                    setPath(width - 2, re.hStart + 1, 'RT');
                     setPath(width - 2, re.hEnd, 'RB');
                 }
                 else {
@@ -440,12 +439,16 @@ function layout(data) {
                         addY(re2.image.height);
                     }
                     else if (dir === 'ver') {
-                        var f = (width / (10 * a3 + 5 ));//图片比例
-                        pushImg(oneArr[0].image, f * 10 * a3 - 2);
-                        pushImg(re1.image, f * 5 - 2, 'no');
-                        addY(re1.image.height);
-                        pushImg(re2.image, f * 5 - 2, 'no');
-                        addY(re2.image.height);
+                        var im3 = (re3.image.height / re3.image.width);
+                        var f = width / ((2 + im3) / im3);
+                        var auto = pushImg(oneArr[0].image, (2 * f / im3) - 2);
+                        if (auto.autoH) {
+                            f = (auto.w + 2) * im3 / 2;
+                        }
+                        pushImg(re1.image, f - 2, 'no');
+                        addY(f);
+                        pushImg(re2.image, f - 2, 'no');
+                        addY(f);
                     }
 
                 }
@@ -466,12 +469,17 @@ function layout(data) {
                             }
                         }
                     }
-                    var im1 = arrs[0];
-                    var im2 = arrs[1];
-                    if (dir === '' || dir === 'hor') {
+                    if (arrs.length === 2) {
+                        var im1 = arrs[0];
+                        var im2 = arrs[1];
                         pushImg(im1.image, width * (im1.ratio / ( im2.ratio + im1.ratio)) - 2);
                         pushImg(im2.image, width * (im2.ratio / ( im2.ratio + im1.ratio)) - 2);
                         addY(im2.image.height);
+                    }
+                    else {
+                        var im1 = arrs[0];
+                        pushImg(im1.image, width - 2);
+                        addY(im1.image.height);
                     }
                 }
                 x = 0;
@@ -540,7 +548,7 @@ function layout(data) {
                 ims.forEach(function (val, index, arr) {
                     var im = val;
                     var ratio = im.width / im.height;
-                    if (ratio < 0.5 || ratio > 1.6) { //图片宽度百分百
+                    if (ratio < 0.4 || ratio > 1.8) { //图片宽度百分百
                         pushImg(im, width);
                         if (im.className.indexOf('rotateImg') > 0) {
                             var h = parseInt(im.height) + parseInt($(im).css('top')) * 2;
@@ -588,6 +596,9 @@ function layout(data) {
             function pushImg(im, w, v) {
                 var pageEnd = false;
                 var imgh = (im.height / im.width) * w;
+                var originW = w;
+                var autoH = false;
+                var border = false;
                 //1.底部自适应
                 // 图片放入后的高度如果超出容器高度，且图片纵横比例不大于3，就将该图片自适应到该容器中
                 if (((imgh + pageH ) > height && (im.height / im.width) < 3)
@@ -596,6 +607,8 @@ function layout(data) {
                         // y = 0;
                         pageEnd = true;
                         w = (im.width / im.height) * (height - pageH - 10);
+                        autoH = true;
+                        // x += (parseInt(originW) - parseInt(w)) / 2;
                     }
                     else {
                         addY(imgh);
@@ -607,19 +620,33 @@ function layout(data) {
                 }
                 //2.图片宽度为满屏且纵横比不是过大时，设置四角虚框
                 if (w === width && (im.height / im.width) < 1.9 && (im.height / im.width) > 0.6 && imgs.length !== 1) {
-                    setPath(2, y, 'LT');
-                    setPath(width - 2, y, 'RT');
+                    if (w > (width * 3 / 4)) {
+                        w = width * 3 / 4;
+                    }
+                    if ((im.height / im.width) > 0.9 && (im.height / im.width) < 1.1) {
+                        w = width * 3 / 5;
+                        imgh = imgh * 3 / 5;
+                    }
+                    border = true;
+                    setPath(2, y + 1, 'LT');
+                    setPath(width - 2, y + 1, 'RT');
                     setPath(2, y + imgh, 'LB');
                     setPath(width - 2, y + imgh, 'RB');
-                    w = width - 100;
                     x = (width - w) / 2;
-                    y += (((width / w) - 1) * (im.height / im.width) * w) / 2;
+                    if (!((im.height / im.width) > 0.9 && (im.height / im.width) < 1.1)) {
+                        y += ((im.height / im.width) * originW - ((im.height / im.width) * w)) / 2;
+                    }
                     $(im).css('transform', 'rotate(3deg)');
                     im.className += ' rotateImg';
                 }
 
                 if (parseInt(x) + parseInt(w) >= width) {
                     x = 0;
+                }
+                //3.前两步处理过的图片若高度大于页容器
+                if ((im.height / im.width) * w > height) {
+                    imgh = height - 4;
+                    w = ( im.width / im.height) * imgh;
                 }
                 im.width = w;
                 $(im).css('top', y + 'px');
@@ -631,9 +658,13 @@ function layout(data) {
                 if (v !== 'no') {
                     x += parseInt(w) + 3;
                 }
-               /* if (pageEnd) {
-                    x = 0;
-                }*/
+                if (border) addY(((im.height / im.width) * originW - ((im.height / im.width) * w)) / 2);
+
+
+                return {autoH: autoH, w: w};
+                /* if (pageEnd) {
+                     x = 0;
+                 }*/
             }
 
             resolve({hStart: hStart, hEnd: pageH, x: x});
